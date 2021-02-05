@@ -1,0 +1,27 @@
+[
+    {
+        "word":"Awful",
+        "meaningEs":"Horrible",
+        "state": true
+    },
+    {
+        "word":"Useful",
+        "meaningEs":"Útil",
+        "state": true
+    },
+    {
+        "word":"Helpful",
+        "meaningEs":"Servicial",
+        "state": true
+    },
+    {
+        "word":"Matter",
+        "meaningEs":"Importar",
+        "state": true
+    },
+    {
+        "word":"Wharf",
+        "meaningEs":"Muelle",
+        "state": true
+    }
+]
