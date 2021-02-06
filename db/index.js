@@ -1,35 +1,17 @@
-const words = require("../resources/words.json");
-const mysql = require("mysql");
-const {promisify} =  require('util');
 const {database} = require('../keys');
+const Sequelize = require("sequelize");
 
-const pool = mysql.createPool(database);
-
-pool.getConnection((err, connection) => {
-    if(err) {
-        if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-            console.error('DATABASE CONNECTIO WAS CLOSED');
-        }
-        if(err.code === 'ER_CON_COUNT_ERROR') {
-            console.error('DATABASE HAS TO MANY CONNECTION');
-        }
-
-        if(err.code === 'ESCONNREFUSED') {
-            console.error('DATABASE CONNECTION WAS REFUSED');
-        }
-    }
-
-    if(connection) connection.release();
-    console.log('DB is connected !!!');
-    return;
+const sequelize = new Sequelize(database.database, database.user, database.password, {
+    host: database.host,
+    dialect: 'mysql'
 });
 
-pool.query = promisify(pool.query);
+sequelize.authenticate()
+.then(() => {
+    console.log('DB is connected !!!');
+})
+.catch(err => {
+    console.log('DB is NOT connected ;( ', err);
+});
 
-module.exports = pool;
-
-/*module.exports = {
-    getWordsRandom: function() {
-        return words;
-    }
-}*/
+module.exports = sequelize;
