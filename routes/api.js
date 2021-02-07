@@ -1,25 +1,36 @@
 const API_BASE = "/wrdsEnglish/word";
 const db = require("../db/index");
-const database = require("../db/index");
 const Word = require("../models/words");
-const bodyParser = require("body-parser");
+const express = require('express');
 
 module.exports = (app) => {
-    app.use(bodyParser.json());
+    app.use(express.json());
     app.get(API_BASE +'/showWords', (req, res) => {
         res.json(db.getWordsRandom());
     })
 
-    app.post(API_BASE +'/addWord', (req, res) => {
-        console.log('---> Body: ', req.body);
+    app.post(API_BASE +'/addWord', (req, res, next) => {
         const {description, meaning_es} = req.body;
         const newWord = {
             description,
             meaning_es
         };
-        const word = Word.create(newWord);
-        console.log('Word added: ', word.id);
-        res.send('Created word');
+        Word.findAll({
+            where: {
+                description: description
+            }
+        }).then((resp) => {
+            if(resp.length > 0) {
+                res.send('This word already exists');
+            } else {
+                Word.create(newWord).then((result) => {
+                    res.send('Create word ' + result.dataValues.description);
+                })
+                .catch(err => {
+                    next(err);
+                });
+            }
+        });
     })
 }
 
