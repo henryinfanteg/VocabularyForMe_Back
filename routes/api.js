@@ -2,11 +2,20 @@ const API_BASE = "/wrdsEnglish/word";
 const db = require("../db/index");
 const Word = require("../models/words");
 const express = require('express');
+const Sequelize = require("sequelize");
 
 module.exports = (app) => {
     app.use(express.json());
-    app.get(API_BASE +'/showWords', (req, res) => {
-        res.json(db.getWordsRandom());
+    app.get(API_BASE +'/showWords/:cant', (req, res) => {
+        const cantWords = parseInt(req.params.cant);
+        Word.findAll({
+            attributes: {exclude: ['createdAt', 'updatedAt']},
+            order: Sequelize.literal('rand()'),
+            limit: cantWords
+        }).then((words) => {
+            res.json(words);
+        });
+        
     })
 
     app.post(API_BASE +'/addWord', (req, res, next) => {

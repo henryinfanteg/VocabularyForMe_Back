@@ -4,7 +4,7 @@ class Word extends Model {}
 
 Word.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    description: DataTypes.STRING,
+    description: {type: DataTypes.STRING, unique: 'compositeIndex'},
     meaning_es: DataTypes.STRING,
     status: {type: DataTypes.BOOLEAN, defaultValue:  true}
   }, {
