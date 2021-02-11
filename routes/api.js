@@ -1,11 +1,12 @@
 const API_BASE = "/wrdsEnglish/word";
-const db = require("../db/index");
 const Word = require("../models/words");
 const express = require('express');
+const cors = require('cors')
 const Sequelize = require("sequelize");
 
 module.exports = (app) => {
     app.use(express.json());
+    app.use(cors()); 
     app.get(API_BASE +'/showWords/:cant', (req, res) => {
         const cantWords = parseInt(req.params.cant);
         Word.findAll({
@@ -33,14 +34,24 @@ module.exports = (app) => {
                 res.send('This word already exists');
             } else {
                 Word.create(newWord).then((result) => {
-                    res.send('Create word ' + result.dataValues.description);
+                    res.status(201).send({resp: 'OK'});
                 })
                 .catch(err => {
-                    next(err);
+                    next(new Error(err));
                 });
             }
         });
-    })
+    });
+
+    app.use((err, req, res, next) => {
+        console.log('ENTRO AL MIDDLEWARE DE ERROR ---');
+        if(err.message.match(/not found/)) {
+            return res.status(404).send({error: err.message});
+        }
+
+        res.status(500).send({error: err.message});
+
+    });
 }
 
 
