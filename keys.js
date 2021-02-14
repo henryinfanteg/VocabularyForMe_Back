@@ -3,7 +3,7 @@ module.exports = {
         host: 'db-words-english-1.cluster-cwktkmlttgpr.us-east-2.rds.amazonaws.com',
         user: 'hengadm',
         password: 'TfgPavNoyYocaQD5dnz9',
-        database: ''
+        database: 'words_english'
     },
     databaseLocal: {
         host: 'localhost',
